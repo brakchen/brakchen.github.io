@@ -1,0 +1,354 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python packages and modules | Brakchen Notes</title>
+<link rel="shortcut icon" href="https://brakchen.github.io/favicon.ico?v=1555758166242">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="stylesheet" href="https://brakchen.github.io/styles/main.css">
+
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://brakchen.github.io">
+  <img class="avatar" src="https://brakchen.github.io/images/avatar.png?v=1555758166242" alt="">
+  </a>
+  <h1 class="site-title">
+    Brakchen Notes
+  </h1>
+  <p class="site-description">
+     加油吧 年轻人
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://brakchen.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://brakchen.github.io/post/resume/" class="menu">
+          Resume
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+      
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Python packages and modules
+            </h2>
+            <div class="post-info">
+              <time class="post-time">
+                · 2019-04-21 ·
+              </time>
+              
+                <a href="https://brakchen.github.io/tag/sLlKFbGM-" class="post-tags">
+                  # Python 基础
+                </a>
+              
+            </div>
+            
+            <div class="post-content">
+              <blockquote>
+<p>python 是通过module组织代码的，每一个module就是一个python文件，但是modules是通过package来组织的。</p>
+</blockquote>
+<p>如果我们自己写着玩，有的时候就是一两个Python文件在同级目录下，但是当我们开始尝试开发更为复杂的项目的时候，package这个概念的使用就有助于我们组织我们写的一个个modules。</p>
+<p>module的概念相对简单，所以不会再多说，主要是说一下package。</p>
+<h2 id="python-package">Python package</h2>
+<p>package的定义很简单，在当面目录下有<code>__init__.py</code>文件的目录即为一个package。</p>
+<p>但是这会分为两种情况，第一种情况是一个空的<code>__init__.py</code>文件，另外一个情况是写了代码的<code>__init__.py</code>文件。不管是空的还是有内容的，这个目录都会被认为是一个<strong>package</strong>,这是一个标识。</p>
+<h2 id="package的初始化工作">package的初始化工作</h2>
+<p>一个package 被导入，不管在什么时候<code>__init__.py</code>的代码都只会被执行一次</p>
+<pre><code class="language-python">&gt;&gt;&gt; import package
+hello world
+&gt;&gt;&gt; import package
+&gt;&gt;&gt; import package
+</code></pre>
+<p>由于 package 被导入时 <code>__init__.py</code> 中的可执行代码会被执行，所以小心在 package 中放置你的代码，尽可能消除它们产生的副作用，比如把代码尽可能的进行封装成函数或类。</p>
+<h3 id="__init__py内的导入顺序"><code>__init__.py</code>内的导入顺序</h3>
+<p>当我尝试导入</p>
+<pre><code class="language-python">from package import something
+</code></pre>
+<p><code>import</code>语句会首先检查<code>something</code>是不是<code>__init__.py</code>的变量，然后检查是不是<code>subpackage</code>，再检查是不是<code>module</code>，最后抛出<code>ImportError</code></p>
+<p>所以检查顺序如下：</p>
+<ol>
+<li><code>__init__.py</code> 文件内变量</li>
+<li>是不是package内的<code>subpackage</code></li>
+<li>是不是package内的<code>module</code></li>
+</ol>
+<h2 id="看个例子">看个例子</h2>
+<p>我们有一个如下结构的package</p>
+<p><img src="https://i.postimg.cc/wBc38R6m/packages.png" alt=""></p>
+<p>在<code>a.py</code>文件内有一个函数</p>
+<pre><code class="language-python">def bar():
+    print(&quot;Hello, function 'bar' from module 'a' calling&quot;)
+</code></pre>
+<p>在<code>b.py</code>文件内有一个函数</p>
+<pre><code class="language-python">def foo():
+    print(&quot;Hello, function 'foo' from module 'b' calling&quot;)
+</code></pre>
+<p>然后我们添加一个空的<code>__init__.py</code> 文件在<code>simple_package</code>里面。</p>
+<p>我们看下，当我们<code>import simple_package</code>的时候到底会发生什么事情(在<code>simple_package</code>内激活<code>Python shell</code> 或者<code>simple_package</code>的的路径被包含在<code>python</code>的<code>sys.path</code>或者在<code>PYTHONPATH</code>的环境变量中)</p>
+<pre><code class="language-python">&gt;&gt;&gt; import simple_package
+&gt;&gt;&gt; 
+&gt;&gt;&gt; simple_package
+&lt;module 'simple_package' from '/home/bernd/Dropbox (Bodenseo)/websites/python-course.eu/examples/simple_package/__init__.py'&gt;
+&gt;&gt;&gt; 
+&gt;&gt;&gt; simple_package.a
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name 'a' is not defined
+&gt;&gt;&gt; 
+&gt;&gt;&gt; simple_package.b
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name 'b' is not defined
+</code></pre>
+<p>我们可以看到<code>simple_package</code>已经被成功导入，但是<code>a.py</code>和<code>b.py</code>并没有被导入</p>
+<p>当然了，如果你希望使用<code>import simple_package</code>后自动加载<code>a</code>或者<code>b</code> 模块，这里有两种办法。</p>
+<p>第一种就是在<code>__init__.py</code>内导入<code>a</code>或者<code>b</code>模块，然后保存再激活<code>python</code>的交互环境</p>
+<pre><code class="language-python">#__init__.py
+import a
+import b
+</code></pre>
+<p>当你再次尝试<code>import simple_package</code>后，就可以使用<code>simple_package.a.bar()</code>来使用模块<code>a</code>中的<code>bar()</code>函数了。</p>
+<p>第二办法就是手动导入，当你想使用模块<code>a</code>中的<code>bar()</code>函数时，需要手动导入</p>
+<pre><code class="language-python">import simple_package.a as a
+</code></pre>
+<p>然后就是可以<code>a.bar()</code>来使用<code>bar()</code>函数了。</p>
+<h2 id="一个更复杂的例子">一个更复杂的例子</h2>
+<p>这是一个来自官方的<a href="https://docs.python.org/3/tutorial/modules.html">例子</a></p>
+<p>文件结构如下</p>
+<pre><code class="language-python">sound
+|-- effects
+|   |-- echo.py
+|   |-- __init__.py
+|   |-- reverse.py
+|   `-- surround.py
+|-- filters
+|   |-- equalizer.py
+|   |-- __init__.py
+|   |-- karaoke.py
+|   `-- vocoder.py
+|-- formats
+|   |-- aiffread.py
+|   |-- aiffwrite.py
+|   |-- auread.py
+|   |-- auwrite.py
+|   |-- __init__.py
+|   |-- wavread.py
+|   `-- wavwrite.py
+`-- __init__.py
+</code></pre>
+<p>你可以将这个package的例子<a href="https://www.python-course.eu/sound1.tar.bz2">下载</a>下来。如果直接使用<code>import sound</code>来导入这个package，我们可以导入package <code>sound</code>，但是<code>sound</code>的子package（<code>effects</code>,<code>filters</code>,<code>formats</code>）并不会被自动导入。子package不会被自动导入的原因是因为在<code>sound</code>目录下的<code>__init__.py</code>文件并没有任何关于导入子package的代码。</p>
+<p>我们来看下在<code>sound</code>目录下的<code>__init__.py</code>的代码</p>
+<pre><code class="language-python">&quot;&quot;&quot;An empty sound package
+
+This is the sound package, providing hardly anything!&quot;&quot;&quot;
+
+
+print(&quot;sound package is getting imported!&quot;)
+
+</code></pre>
+<p>然后我们导入<code>sound</code>试下</p>
+<pre><code class="language-python">&gt;&gt;&gt; import sound
+sound package is getting imported!
+&gt;&gt;&gt; sound
+&lt;module 'sound' from '/home/bernd/packages/sound/__init__.py'&gt;
+&gt;&gt;&gt; sound.effects
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: module 'sound' has no attribute 'effects'
+</code></pre>
+<p>如果你想使用子package的内容，但是在父package的<code>__init__.py</code>的文件内并没有导入，你需要手动导入</p>
+<pre><code class="language-python">&gt;&gt;&gt; import sound.effects
+effects package is getting imported!
+&gt;&gt;&gt; sound.effects
+&lt;module 'sound.effects' from '/home/bernd/packages/sound/effects/__init__.py'&gt;
+</code></pre>
+<p>如果你希望<code>python</code>帮你自动导入<code>sound.effects</code>你可以往<code>sound</code>目录下的<code>__init__.py</code>文件写入</p>
+<pre><code class="language-python">&quot;&quot;&quot;An empty sound package
+
+This is the sound package, providing hardly anything!&quot;&quot;&quot;
+
+import sound.effects
+print(&quot;sound package is getting imported!&quot;)
+</code></pre>
+<p>那么你下次运行的时候<code>python</code>就会自动帮你导入<code>sound.effects</code></p>
+<pre><code class="language-python">&gt;&gt;&gt; import sound
+effects package is getting imported!
+sound package is getting imported!
+</code></pre>
+<p>当然了，除了使用绝对路径你可以使用相对路径来导入<code>sound.effects</code></p>
+<pre><code class="language-python">&quot;&quot;&quot;An empty sound package
+
+This is the sound package, providing hardly anything!&quot;&quot;&quot;
+
+from . import effects
+print(&quot;sound package is getting imported!&quot;)
+</code></pre>
+<p>这跟<code>linux</code>的命令行比较像，<code>.</code>代表当前目录，<code>..</code>代表上级目录</p>
+<p>所以你可以在<code>sound.effects</code>的<code>__init__.py</code>文件内写入</p>
+<pre><code class="language-python">from .. import formats
+</code></pre>
+<p>来导入<code>sound.formats</code>。</p>
+<p>当你使用<code>sound</code>的时候就会发现，<code>sound.effects</code>和<code>sound.formats</code>都被导入了</p>
+<pre><code class="language-python">&gt;&gt;&gt; import sound
+formats package is getting imported!
+effects package is getting imported!
+sound package is getting imported!
+</code></pre>
+<p>最后我想给你展示下，怎么从<code>sound.effects</code>导入<code>sound.filters.karaoke</code>模块，将一下代码加入到<code>sound.effects</code>的<code>__init__.py</code>文件中</p>
+<pre><code class="language-python">&quot;&quot;&quot;An empty effects package
+
+This is the effects package, providing hardly anything!&quot;&quot;&quot;
+
+from .. import formats
+from ..filters import karaoke
+print(&quot;effects package is getting imported!&quot;)
+
+</code></pre>
+<p>激活<code>python</code>的交互环境以后，尝试<code>import sound</code></p>
+<pre><code class="language-python">&gt;&gt;&gt; import sound
+formats package is getting imported!
+filters package is getting imported!
+Module karaoke.py has been loaded!
+effects package is getting imported!
+sound package is getting imported!
+
+</code></pre>
+<p>现在我们可以使用<code>karaoke</code>的函数了</p>
+<pre><code class="language-python">&gt;&gt;&gt; sound.filters.karaoke.func1()
+Funktion func1 has been called!
+&gt;&gt;&gt; 
+
+</code></pre>
+<h2 id="把你的整个package都导入进来">把你的整个package都导入进来</h2>
+<p>还是用前面的例子，这一次，我会额外的加入一个叫做<code>foobar</code>的模块在主目录，你可以在这里<a href="https://www.python-course.eu/sound4.tar.bz2">下载</a>例子</p>
+<p>我们尝试使用<code>*</code>来进行全部的导入</p>
+<pre><code class="language-python">&gt;&gt;&gt; from sound import *
+sound package is getting imported!
+
+</code></pre>
+<p>我们可以看到仅仅是导入了<code>sound</code>这个package但是其他的内容并没有导入。</p>
+<pre><code class="language-python">&gt;&gt;&gt; dir()
+['__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__']
+
+</code></pre>
+<h3 id="__all__"><code>__all__</code></h3>
+<p>我们可以使用<code>__all__</code>这个魔法函数来手动导入模块和子package，当你定义了<code>__all__</code>到<code>__init__.py</code>文件以后，<code>python</code>会根据你在list内给出的元素进行逐个导入</p>
+<pre><code class="language-python">__all__ = [&quot;formats&quot;, &quot;filters&quot;, &quot;effects&quot;, &quot;foobar&quot;]
+
+</code></pre>
+<p>所以我们可以再次导入试试</p>
+<pre><code class="language-python">&gt;&gt;&gt; from sound import *
+sound package is getting imported!
+formats package is getting imported!
+filters package is getting imported!
+effects package is getting imported!
+The module foobar is getting imported
+
+</code></pre>
+<p>看下<code>dir()</code></p>
+<pre><code class="language-python">&gt;&gt;&gt; dir()
+['__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__', 'effects', 'filters', 'foobar', 'formats']
+&gt;&gt;&gt;
+
+</code></pre>
+<p>你会发现所有模块都已经被顺利导入。</p>
+<p>那如果我们仅仅导入<code>sound.effects</code>package内所有内容呢，会发生什么，我们<code>import</code>的时候到底<code>import</code>的是什么。</p>
+<p>我们看下结果</p>
+<pre><code class="language-python">&gt;&gt;&gt; from sound.effects import *
+sound package is getting imported!
+effects package is getting imported!
+&gt;&gt;&gt; dir()
+['__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__']
+&gt;&gt;&gt; 
+
+</code></pre>
+<p>你会发现他仅仅是导入了<code>sound.effects</code>这个package，跟你没有修改<code>sound</code>的<code>__init__.py</code>之前是类似情况，仅仅是导入了这个package。</p>
+<p>所以你也可以修改<code>sound.effects</code>的<code>__init__.py</code>文件来导入<code>effects</code>内的所有模块</p>
+<pre><code class="language-python">__all__ = [&quot;echo&quot;, &quot;surround&quot;, &quot;reverse&quot;]
+
+</code></pre>
+<p>看下结果</p>
+<pre><code class="language-python">&gt;&gt;&gt; from sound.effects import *
+sound package is getting imported!
+effects package is getting imported!
+Module echo.py has been loaded!
+Module surround.py has been loaded!
+Module reverse.py has been loaded!
+&gt;&gt;&gt; dir()
+['__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__', 'echo', 'reverse', 'surround']
+&gt;&gt;&gt; 
+
+</code></pre>
+<h2 id="总结">总结</h2>
+<ol>
+<li>在 <code>from package import *</code> 语句中，如果 <code>__init__.py</code> 中定义了 <code>__all__</code> 魔法变量，那么在<code>__all__</code>内的所有元素都会被作为模块自动被导入（<code>ImportError</code>任然会出现，如果自动导入的模块不存在的话）。</li>
+<li>如果 <code>__init__.py</code> 中没有 <code>__all__</code> 变量，导出将按照以下规则执行：
+<ol>
+<li>此 package 被导入，并且执行 <code>__init__.py</code> 中可被执行的代码</li>
+<li><code>__init__.py</code> 中定义的 variable 被导入</li>
+<li><code>__init__.py</code> 中被显式导入的 module 被导入</li>
+</ol>
+</li>
+</ol>
+<h2 id="reference">reference</h2>
+<p><a href="https://sanyuesha.com/2017/09/14/deep-understand-python-package/">深入理解 Python package</a></p>
+<p>[Packages in Python</p>
+
+            </div>
+          </article>
+        </div>
+    
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://brakchen.github.io/post/resume">
+              <h3 class="post-title">
+                Resume
+              </h3>
+            </a>
+          </div>  
+        
+
+        
+    
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+      </div>
+    </div>
+  </body>
+</html>
